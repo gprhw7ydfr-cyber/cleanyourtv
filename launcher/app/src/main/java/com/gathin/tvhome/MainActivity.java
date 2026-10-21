@@ -2207,7 +2207,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             addInputRow(rows, popup, R.drawable.ic_input, getString(R.string.inputs), -1, this::openSourcePanel);
         }
         Intent liveTv = liveTvIntent();
-        if (liveTv != null && tunerId != null) {
+        // Xiaomi's com.android.tv (MiTV-AXSO2, Android 11) crashes on the passthrough URI when no channels are
+        // scanned (NPE in ChannelAdapter.updateData) but opens fine from its leanback entry point.
+        if (liveTv != null && tunerId != null && getResources().getBoolean(R.bool.live_tv_tune_input)) {
             // Tune that input only when the Live TV package itself handles the URI.
             // The unrestricted input player also resolves it (that is how HDMI opens), but on the
             // AIWA AI PONT SA that player stays black, and the Live TV package does not handle the
